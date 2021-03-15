@@ -34,7 +34,8 @@ public class KafkaProducer {
             //3. send the data
             producer.send(record);
 
-            Thread.sleep(3000);
+            Thread.sleep(500);
+            i++;
 
         }
 
