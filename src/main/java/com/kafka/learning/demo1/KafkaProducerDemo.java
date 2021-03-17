@@ -2,13 +2,14 @@ package com.kafka.learning.demo1;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
 
-public class KafkaProducer {
+public class KafkaProducerDemo {
     /*
      * 1. create producer properties
      * 2. create producer
@@ -25,7 +26,7 @@ public class KafkaProducer {
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
         //2. create the producer
-        org.apache.kafka.clients.producer.KafkaProducer<String, String> producer = new org.apache.kafka.clients.producer.KafkaProducer<String, String>(properties);
+        KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties);
 
         int i=0;
         while (i<100) {

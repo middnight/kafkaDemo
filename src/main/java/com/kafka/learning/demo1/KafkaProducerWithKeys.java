@@ -1,16 +1,20 @@
 package com.kafka.learning.demo1;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.protocol.types.Field;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
+import java.util.Random;
 
-public class KafkaProducerWithCallback {
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaProducerWithCallback.class);
-
+public class KafkaProducerWithKeys {
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaProducerWithKeys.class);
+    private static final Random random=new Random();
     /*
      * 1. create producer properties
      * 2. create producer
@@ -32,24 +36,31 @@ public class KafkaProducerWithCallback {
         int i = 0;
         while (i < 100) {
 
+            String topic="first_topic";
+            String message= RandomStringUtils.random(10,true,false);
+            String key="key_"+random.nextInt(3);
+
+
             //create a producer record
-            ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", "Hello World" + i);
+            ProducerRecord<String, String> record = new ProducerRecord<>(topic,key,message);
+
+            LOGGER.info("key is : "+key);
 
             //3. send the data
             producer.send(record, (recordMetadata, e) -> {
                 if (e == null) {
                     LOGGER.info("New Message Produced :\n" +
-                            "Topic Name : " + recordMetadata.topic() + "\n" +
-                            "Partition " + recordMetadata.partition() + "\n" +
+                            "Topic Name : " + recordMetadata.topic() + "\t" +
+                            "Partition " + recordMetadata.partition() + "\t" +
                             "Offset " + recordMetadata.offset());
 
                 } else {
-                    LOGGER.error("Exception occured while producing the message. ", e);
+                    LOGGER.error("Exception occurred while producing the message. ", e);
                 }
             });
 
-            Thread.sleep(500);
-            i++;
+            Thread.sleep(2000);
+            //i++;
 
         }
 
